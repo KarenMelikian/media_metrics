@@ -1,0 +1,23 @@
+import jwt
+from datetime import datetime
+from app.config import settings
+
+def create_token(data: dict) -> str:
+    payload = {
+        "full_name": data.get("full_name"),
+        "email": data.get("email"),
+        "password": data.get("password"),
+        "exp": datetime.utcnow() + settings.JWT_ACCESS_TOKEN_LIFETIME,
+        "iat": datetime.utcnow()
+    }
+    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+
+
+def decode_token(token: str) -> dict:
+    try:
+        decoded = jwt.decode(token, settings.JWT_SECRET, algorithms=settings.JWT_ALGORITHM)
+        return decoded
+    except jwt.ExpiredSignatureError:
+        raise ValueError("Token expired")
+    except jwt.InvalidTokenError:
+        raise ValueError("Invalid token")

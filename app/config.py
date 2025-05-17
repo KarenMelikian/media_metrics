@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import Dict, Any
+from pydantic import Field
+from datetime import timedelta
 
 
 class Settings(BaseSettings):
@@ -8,6 +9,9 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
+    JWT_SECRET: str
+    JWT_ALGORITHM: str = "HS256"
+    JWT_ACCESS_TOKEN_LIFETIME: timedelta = Field(default=timedelta(minutes=5))
 
 
     @property
