@@ -1,12 +1,12 @@
 import bcrypt
 import jwt
-from datetime import datetime
+from datetime import datetime, timedelta
 from config import settings
 
-def create_token(payload: dict) -> str:
+def create_token(payload: dict, expire_timedelta: timedelta) -> str:
     to_encode = payload.copy()
     to_encode.update(
-        exp=datetime.utcnow() + settings.JWT_ACCESS_TOKEN_LIFETIME,
+        exp=datetime.utcnow() + expire_timedelta,
         iat=datetime.utcnow()
     )
 

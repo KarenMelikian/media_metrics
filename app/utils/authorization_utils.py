@@ -5,7 +5,7 @@ from fastapi import (
     Depends
 )
 from sqlalchemy import select
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from session import SessionDep
 from models.user import *

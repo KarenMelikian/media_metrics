@@ -11,7 +11,8 @@ class Settings(BaseSettings):
     DB_NAME: str
     JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
-    JWT_ACCESS_TOKEN_LIFETIME: timedelta = Field(default=timedelta(minutes=5))
+    JWT_ACCESS_TOKEN_LIFETIME: timedelta = Field(default=timedelta(minutes=10))
+    JWT_REFRESH_TOKEN_LIFETIME: timedelta = Field(default=timedelta(days=1))
 
 
     @property

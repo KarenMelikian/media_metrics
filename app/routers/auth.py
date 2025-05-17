@@ -5,12 +5,13 @@ from fastapi import (
 
 from utils.jwt_auth import create_token
 from utils.authorization_utils import validate_auth_user, get_current_auth_user
+from utils.get_tokens import get_access_token, get_refresh_token
 from schemas.user import UserSchema
 from schemas.auth import TokenInfo
 
+
+
 router = APIRouter()
-
-
 
 
 
@@ -25,12 +26,11 @@ async def user_login(
         "full_name": user.full_name,
     }
 
-    token = create_token(jwt_payload)
-
     return TokenInfo(
-        access_token=token,
-        token_type='Bearer'
+        access_token=get_access_token(user),
+        refresh_token=get_refresh_token(user),
     )
+
 
 @router.get('/me')
 async def self_info(
