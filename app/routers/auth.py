@@ -1,17 +1,40 @@
 from fastapi import (
     APIRouter,
-    Depends
+    Depends,
+    HTTPException,
+    status
 )
 
 
 from utils.authorization_utils import validate_auth_user, check_access_and_get_user, check_refresh_and_get_user
 from utils.get_tokens import get_access_token, get_refresh_token
+from utils.jwt_auth import hash_password
+from models.user import User
 from schemas.user import UserSchema
 from schemas.auth import TokenInfo
-
+from session import SessionDep
 
 
 router = APIRouter()
+
+
+
+@router.post('/register')
+async def create_sender(data: UserSchema, session: SessionDep):
+    new_user = User(
+        full_name=data.full_name,
+        email=data.email,
+        password=hash_password(data.password)
+    )
+
+    session.add(new_user)
+    await session.commit()
+    await session.refresh(new_user)
+    return HTTPException(
+        status_code=status.HTTP_201_CREATED,
+        detail={"user_id": new_user.id}
+    )
+
 
 
 
