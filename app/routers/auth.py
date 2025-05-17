@@ -6,12 +6,15 @@ from fastapi import (
     Depends
 )
 from sqlalchemy import select
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
 from session import SessionDep
 from models.user import *
-from utils.jwt_auth import validate_password, create_token
+from utils.jwt_auth import validate_password, create_token, decode_token
 from schemas.user import UserSchema
 from schemas.auth import TokenInfo
 
+http_bearer = HTTPBearer()
 router = APIRouter()
 
 
@@ -40,12 +43,32 @@ async def validate_auth_user(
     raise unauthed_exc
 
 
+
+async def get_current_auth_user(
+        session: SessionDep,
+        credentials: HTTPAuthorizationCredentials = Depends(http_bearer)
+) -> User:
+    token = credentials.credentials
+    payload = decode_token(token)
+    user_id = int(payload["sub"])
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+
+    result = await session.execute(select(User).where(User.id == user_id))
+    user = result.scalars().first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user
+
+
+
 @router.post('/login')
 async def user_login(
         user: UserSchema = Depends(validate_auth_user)
 ):
     jwt_payload = {
-        "sub": user.id,
+        "sub": str(user.id),
         "email": user.email,
         "full_name": user.full_name,
     }
@@ -56,3 +79,12 @@ async def user_login(
         access_token=token,
         token_type='Bearer'
     )
+
+@router.get('/me')
+async def self_info(
+        user: UserSchema = Depends(get_current_auth_user)
+):
+    return {
+        'full_name': user.full_name,
+        'email': user.email
+    }
