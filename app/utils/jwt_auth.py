@@ -3,15 +3,14 @@ import jwt
 from datetime import datetime
 from config import settings
 
-def create_token(data: dict) -> str:
-    payload = {
-        "full_name": data.get("full_name"),
-        "email": data.get("email"),
-        "password": data.get("password"),
-        "exp": datetime.utcnow() + settings.JWT_ACCESS_TOKEN_LIFETIME,
-        "iat": datetime.utcnow()
-    }
-    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+def create_token(payload: dict) -> str:
+    to_encode = payload.copy()
+    to_encode.update(
+        exp=datetime.utcnow() + settings.JWT_ACCESS_TOKEN_LIFETIME,
+        iat=datetime.utcnow()
+    )
+
+    return jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
 
 
 def decode_token(token: str) -> dict:
@@ -26,12 +25,11 @@ def decode_token(token: str) -> dict:
 
 def hash_password(password: str) -> bytes:
     salt = bcrypt.gensalt()
-    pwd_bytes: bytes = password.encode()
-    return bcrypt.hashpw(pwd_bytes, salt)
+    return bcrypt.hashpw(password.encode(), salt)
 
 
 def validate_password(password: str, hashed_password: bytes) -> bool:
     return bcrypt.checkpw(
         password=password.encode(),
-        hashed_password=hashed_password
+        hashed_password=hashed_password.encode()
     )
