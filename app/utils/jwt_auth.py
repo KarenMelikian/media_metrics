@@ -1,7 +1,7 @@
 import bcrypt
 import jwt
 from datetime import datetime
-from app.config import settings
+from config import settings
 
 def create_token(data: dict) -> str:
     payload = {
