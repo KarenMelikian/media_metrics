@@ -59,15 +59,8 @@ async def get_current_user_payload(
 
 async def get_current_auth_user(
         session: SessionDep,
-        payload: dict = Depends(get_current_user_payload)
+        user_id: int
 ) -> User:
-    token_type = payload.get('type')
-    if token_type != 'access':
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Invalid token type: expected access'
-        )
-    user_id = int(payload["sub"])
     if not user_id:
         raise HTTPException(status_code=401, detail="Invalid token payload")
 
@@ -76,4 +69,33 @@ async def get_current_auth_user(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
+    return user
+
+
+
+async def check_access_and_get_user(
+        session: SessionDep,
+        payload: dict = Depends(get_current_user_payload)
+) -> User:
+    token_type = payload.get('type')
+    if token_type != 'access':
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid token type '{token_type}': expected 'access'"
+        )
+    user = await get_current_auth_user(session=session, user_id=int(payload["sub"]))
+    return user
+
+
+async def check_refresh_and_get_user(
+        session: SessionDep,
+        payload: dict = Depends(get_current_user_payload)
+) -> User:
+    token_type = payload.get('type')
+    if token_type != 'refresh':
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid token type '{token_type}': expected 'refresh'"
+        )
+    user = await get_current_auth_user(session=session, user_id=int(payload["sub"]))
     return user
