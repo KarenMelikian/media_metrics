@@ -40,10 +40,10 @@ async def validate_auth_user(
 
 
 
-async def get_current_auth_user(
-        session: SessionDep,
+
+async def get_current_user_payload(
         credentials: HTTPAuthorizationCredentials = Depends(http_bearer)
-) -> User:
+) -> dict:
     token = credentials.credentials
     try:
         payload = decode_token(token)
@@ -51,6 +51,21 @@ async def get_current_auth_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Invalid token error'
+        )
+    return payload
+
+
+
+
+async def get_current_auth_user(
+        session: SessionDep,
+        payload: dict = Depends(get_current_user_payload)
+) -> User:
+    token_type = payload.get('type')
+    if token_type != 'access':
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Invalid token type: expected access'
         )
     user_id = int(payload["sub"])
     if not user_id:
