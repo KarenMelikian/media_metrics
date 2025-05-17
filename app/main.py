@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
-from app.routers import auth, submission
-from app.database import Base, engine
+from routers import auth, submission
+from database import Base, engine
 
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -18,3 +18,9 @@ app.add_middleware(
 
 app.include_router(auth.router, prefix="/api", tags=["Auth"])
 app.include_router(submission.router, prefix="/api", tags=["Submissions"])
+
+
+
+if __name__ == '__main__':
+    uvicorn.run('main:app', reload=True, host='0.0.0.0', port=8000)
+
