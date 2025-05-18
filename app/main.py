@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from routers import auth, submission, user
+from routers import auth, user_inputs, user
 
 
 app = FastAPI()
@@ -16,8 +16,8 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix="/api", tags=["Auth"])
-app.include_router(user.router, prefix="/api", tags=["User"])
-app.include_router(submission.router, prefix="/api/submissions", tags=["Submissions"])
+app.include_router(user.router, prefix="/api/user", tags=["User"])
+app.include_router(user_inputs.router, prefix="/api/dashboard", tags=["Dashboard"])
 
 
 
