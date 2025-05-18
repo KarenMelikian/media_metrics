@@ -2,7 +2,7 @@ from sqlalchemy import select
 from fastapi import APIRouter, HTTPException, status
 
 from models.user import *
-from session import SessionDep
+from core.session import SessionDep
 
 router = APIRouter()
 

@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from .jwt_auth import create_token
-from config import settings
+from core.config import settings
 from schemas.user import UserSchema
 
 

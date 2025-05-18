@@ -12,7 +12,7 @@ from utils.jwt_auth import hash_password
 from models.user import User
 from schemas.user import UserSchema
 from schemas.auth import TokenInfo
-from session import SessionDep
+from core.session import SessionDep
 
 
 router = APIRouter()

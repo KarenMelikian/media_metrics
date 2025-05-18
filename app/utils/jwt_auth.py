@@ -1,7 +1,7 @@
 import bcrypt
 import jwt
 from datetime import datetime, timedelta
-from config import settings
+from core.config import settings
 
 def create_token(payload: dict, expire_timedelta: timedelta) -> str:
     to_encode = payload.copy()

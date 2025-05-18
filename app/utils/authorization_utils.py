@@ -7,7 +7,7 @@ from fastapi import (
 from sqlalchemy import select
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from session import SessionDep
+from core.session import SessionDep
 from models.user import *
 from utils.jwt_auth import validate_password, decode_token
 

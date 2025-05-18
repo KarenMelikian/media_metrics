@@ -3,12 +3,12 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class UserInputFieldCreate(BaseModel):
+class UserInputFieldCreateSchema(BaseModel):
     label: str
     value: str
 
 
-class UserInputFieldRead(UserInputFieldCreate):
+class UserInputFieldReadSchema(UserInputFieldCreateSchema):
     id: int
     created_at: datetime
     user_id: int

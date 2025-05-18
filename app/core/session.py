@@ -2,7 +2,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from typing import Annotated
 
-from database import engine
+from .database import engine
 
 Session = async_sessionmaker(
     engine,
