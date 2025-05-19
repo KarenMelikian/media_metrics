@@ -1,5 +1,4 @@
 from fastapi import (
-    Form,
     HTTPException,
     status,
     Depends
@@ -9,6 +8,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from core.session import SessionDep
 from models.user import *
+from schemas.auth import LoginInput
 from utils.jwt_auth import validate_password, decode_token
 
 http_bearer = HTTPBearer()
@@ -16,22 +16,22 @@ http_bearer = HTTPBearer()
 
 async def validate_auth_user(
         session: SessionDep,
-        email: str = Form(),
-        password: str = Form(),
+        data: LoginInput,
+
 ):
     unauthed_exc = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail='Invalid email or password'
     )
     user_query = await session.execute(
-        select(User).where(User.email==email)
+        select(User).where(User.email==data.email)
     )
     user = user_query.scalars().one_or_none()
     if not user:
         raise unauthed_exc
 
     if validate_password(
-        password=password,
+        password=data.password,
         hashed_password=user.password
     ):
         return user

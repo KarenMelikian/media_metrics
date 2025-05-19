@@ -30,16 +30,13 @@ async def create_sender(data: UserSchema, session: SessionDep):
     session.add(new_user)
     await session.commit()
     await session.refresh(new_user)
-    return HTTPException(
-        status_code=status.HTTP_201_CREATED,
-        detail={"user_id": new_user.id}
-    )
+    return {"user_id": new_user.id}
 
 
 
 
 
-@router.post('/login')
+@router.post('/login', response_model=TokenInfo)
 async def user_login(
         user: UserSchema = Depends(validate_auth_user)
 ):

@@ -11,15 +11,6 @@ from utils.authorization_utils import check_access_and_get_user
 router = APIRouter()
 
 
-from fastapi import (
-    APIRouter
-)
-
-
-
-
-
-router = APIRouter()
 
 
 

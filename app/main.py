@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import uvicorn
 
 from routers import auth, user_inputs, user
@@ -15,7 +17,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router, prefix="/api", tags=["Auth"])
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+@app.get("/")
+def serve_index():
+    return FileResponse("frontend/index.html")
+
+@app.get("/dashboard")
+def serve_dashboard():
+    return FileResponse("frontend/dashboard.html")
+
+
+
+app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(user.router, prefix="/api/user", tags=["User"])
 app.include_router(user_inputs.router, prefix="/api/dashboard", tags=["Dashboard"])
 
