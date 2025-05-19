@@ -38,19 +38,25 @@ Docker & Docker Compose
 
 ✅ 1. Clone the Repository
 
-git clone https://github.com/KarenMelikian/media_metrics.git
-cd erpnext-backend
+`git clone https://github.com/KarenMelikian/media_metrics.git`
+
+`cd media_metrics`
 
 ✅ 2. Set Up Environment Variables
 
 Create a .env file in the root directory:
 
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=''
-DB_PASS=''
-DB_NAME='
-JWT_SECRET=CTtub0jezl1M3U23O5of8vr-aw68O3mRI39YQdn_koHba5KyXIFwLQHfWP5OceoBs8ACNHT1Ip5HhfPR85xMXQ
+`DB_HOST=localhost`
+
+`DB_PORT=3306`
+
+`DB_USER=''`
+
+`DB_PASS=''`
+
+`DB_NAME=''`
+
+`JWT_SECRET=CTtub0jezl1M3U23O5of8vr-aw68O3mRI39YQdn_koHba5KyXIFwLQHfWP5OceoBs8ACNHT1Ip5HhfPR85xMXQ`
 
 ⚠️ Make sure DATABASE_URL matches Docker Compose credentials.
 
@@ -58,26 +64,27 @@ JWT_SECRET=CTtub0jezl1M3U23O5of8vr-aw68O3mRI39YQdn_koHba5KyXIFwLQHfWP5OceoBs8ACN
 
 ✅ Run MariaDB via Docker Compose:
 
-docker-compose up -d
+`docker-compose up -d`
 
 MariaDB is now accessible at localhost:3306.
 
 ✅ 4. Create & Activate Virtual Environment
 
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+`python -m venv .venv`
+
+`source .venv/bin/activate`  # Windows: `.venv\Scripts\activate`
 
 ✅ 5. Install Requirements
 
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 ✅ 6. Alembic Migrations to DataBase
 
-alembic upgrade head
+`alembic upgrade head`
 
 ✅ 7. Run the App
 
-python app/main.py
+`python app/main.py`
 
 📃 API Endpoints
 
