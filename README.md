@@ -1,4 +1,4 @@
-ERPNext Backend – Python Developer Assessment
+Media Metrics Backend – Python Developer Assessment
 
 This project is a FastAPI-based backend system built for a developer assessment. It features user registration, login with JWT authentication, dynamic form input storage, and CSV/Excel data import/export. The backend uses MariaDB for persistent storage and SQLAlchemy as the ORM.
 
