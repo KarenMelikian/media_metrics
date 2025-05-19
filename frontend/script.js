@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = emailInput.value;
     const password = passwordInput.value;
 
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const email = registerForm.email.value;
         const password = registerForm.password.value;
 
-        const response = await fetch("/api/auth/register", {
+        const response = await fetch("/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ full_name, email, password })
