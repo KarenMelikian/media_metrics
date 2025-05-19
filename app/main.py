@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import uvicorn
 
-from routers import auth, user_inputs, user, export_import_csv
+from routers import auth, user_inputs, user, export_import_csv, export_import_excel
 
 
 app = FastAPI()
@@ -33,7 +33,7 @@ app.include_router(auth.router, prefix="/api", tags=["Auth"])
 app.include_router(user.router, prefix="/api/user", tags=["User"])
 app.include_router(user_inputs.router, prefix="/api/dashboard", tags=["Dashboard"])
 app.include_router(export_import_csv.router, prefix="/api/csv", tags=["CSV"])
-
+app.include_router(export_import_excel.router, prefix="/api/excel", tags=["Excel"])
 
 
 if __name__ == '__main__':
