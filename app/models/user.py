@@ -13,5 +13,3 @@ class User(Base):
     full_name: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-
-    input_fields: Mapped[List["UserInputField"]] = relationship(back_populates="user")
