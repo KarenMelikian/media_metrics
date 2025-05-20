@@ -32,8 +32,8 @@ def serve_dashboard():
 app.include_router(auth.router, prefix="/api", tags=["Auth"])
 app.include_router(user.router, prefix="/api/user", tags=["User"])
 app.include_router(forms.router, prefix="/api/forms", tags=["Forms"])
-# app.include_router(export_import_csv.router, prefix="/api/csv", tags=["CSV"])
-# app.include_router(export_import_excel.router, prefix="/api/excel", tags=["Excel"])
+app.include_router(export_import_csv.router, prefix="/api/csv", tags=["CSV"])
+app.include_router(export_import_excel.router, prefix="/api/excel", tags=["Excel"])
 
 
 if __name__ == '__main__':

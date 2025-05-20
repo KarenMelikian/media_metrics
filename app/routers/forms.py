@@ -140,7 +140,6 @@ async def get_submissions(
     if not form or form.user_id != user.id:
         raise HTTPException(status_code=404, detail="Form not found or not yours")
 
-    # Determine ordering column and direction
     order_column = {
         "created_at": FormSubmission.created_at,
         "submission_id": FormSubmission.id,
