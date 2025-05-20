@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select, delete
-from typing import List
+from fastapi import APIRouter, Depends, HTTPException, status, Query
+from sqlalchemy import select, delete, asc, desc
+from typing import List, Literal
 
 from core.session import SessionDep
 from models.user_inputs import Form, FormField, FormSubmission, FormSubmissionField
@@ -132,14 +132,26 @@ async def submit_form(
 async def get_submissions(
     form_id: int,
     session: SessionDep,
-    user: UserSchema = Depends(check_access_and_get_user)
+    user: UserSchema = Depends(check_access_and_get_user),
+    order_by: Literal["created_at", "submission_id"] = Query("created_at"),
+    order_dir: Literal["asc", "desc"] = Query("desc")
 ):
     form = await session.get(Form, form_id)
     if not form or form.user_id != user.id:
         raise HTTPException(status_code=404, detail="Form not found or not yours")
 
+    # Determine ordering column and direction
+    order_column = {
+        "created_at": FormSubmission.created_at,
+        "submission_id": FormSubmission.id,
+    }[order_by]
+
+    order_func = asc if order_dir == "asc" else desc
+
     query = await session.execute(
-        select(FormSubmission).where(FormSubmission.form_id == form_id)
+        select(FormSubmission)
+        .where(FormSubmission.form_id == form_id)
+        .order_by(order_func(order_column))
     )
     submissions = query.scalars().all()
 

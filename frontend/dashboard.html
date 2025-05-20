@@ -209,6 +209,19 @@
       <button onclick="submitForm()">Submit</button>
 
       <h3>Submissions</h3>
+      <div class="form-row">
+        <label for="orderBy">Order by:</label>
+        <select id="orderBy" onchange="loadSubmissions()">
+          <option value="created_at">Created At</option>
+          <option value="submission_id">Submission ID</option>
+        </select>
+
+        <label for="orderDir" style="margin-left:20px;">Direction:</label>
+        <select id="orderDir" onchange="loadSubmissions()">
+          <option value="desc">Descending</option>
+          <option value="asc">Ascending</option>
+        </select>
+      </div>
       <div id="submissions"></div>
     </div>
   </div>
@@ -407,18 +420,29 @@
     }
   }
 
+  let orderBy = "created_at";  // default order by created_at
+  let orderDir = "desc";
+
   async function loadSubmissions() {
+    if (!formId) return;
+
+    // Get current ordering selections from dropdowns (sync the global vars)
+    orderBy = document.getElementById("orderBy").value;
+    orderDir = document.getElementById("orderDir").value;
+
     try {
-      const res = await fetch(`${apiBase}/${formId}/submissions`, { headers: authHeaders });
-      const submissions = await res.json();
+      const res = await fetch(`${apiBase}/${formId}/submissions?order_by=${orderBy}&order_dir=${orderDir}`, {
+        headers: authHeaders
+      });
+      const data = await res.json();
       if (res.ok) {
-        renderSubmissions(submissions);
+        renderSubmissions(data);
       } else {
-        document.getElementById("submissions").innerHTML = "<p>Failed to load submissions</p>";
+        alert("Failed to load submissions.");
       }
     } catch (error) {
       console.error(error);
-      document.getElementById("submissions").innerHTML = "<p>Network error while loading submissions</p>";
+      alert("Network error while loading submissions.");
     }
   }
 
@@ -442,12 +466,10 @@
       html += `<td>${new Date(sub.created_at).toLocaleString()}</td>`;
 
       fields.forEach(f => {
-        // Allow inline editing: if editingSubmissionId matches, show input else text
+        const val = sub.values[f.id] || "";
         if (editingSubmissionId === sub.submission_id) {
-          const val = sub.values[f.id] || "";
           html += `<td><input type="text" name="${f.id}" value="${val}" /></td>`;
         } else {
-          const val = sub.values[f.id] || "";
           html += `<td>${val}</td>`;
         }
       });
@@ -469,6 +491,7 @@
 
     document.getElementById("submissions").innerHTML = html;
   }
+
 
   function startEdit(submissionId) {
     if (editingSubmissionId !== null) {
